@@ -11,7 +11,6 @@ import (
 func Copy(toValue interface{}, fromValue interface{}) (err error) {
 	var (
 		isSlice   bool
-		sliceDims int
 		amount    = 1
 		from      = indirect(reflect.ValueOf(fromValue))
 		to        = indirect(reflect.ValueOf(toValue))
@@ -55,8 +54,6 @@ func Copy(toValue interface{}, fromValue interface{}) (err error) {
 		var dest, source reflect.Value
 
 		if isSlice {
-			sliceDims = SliceDims(from.Type())
-			fmt.Println(sliceDims)
 			// source
 			if from.Kind() == reflect.Slice {
 				source = indirect(from.Index(i)) //this gives value on i-th index of slice - this could be another slice in 2d slices
@@ -71,10 +68,8 @@ func Copy(toValue interface{}, fromValue interface{}) (err error) {
 			dest = indirect(to)
 		}
 
-		//if()
-
 		// check source
-		if source.IsValid() /*&& (!isSlice || sliceDims < 2)*/ {
+		if source.IsValid() {
 			fromTypeFields := deepFields(fromType) //this gets all fields in the struct //the fromType here  perhaps not expected to be a slice, but it can be in 2d slices
 			//fmt.Println( fromTypeFields)
 			// Copy from field to field or method
